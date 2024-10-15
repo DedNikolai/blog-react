@@ -1,13 +1,17 @@
-import React from 'react';
+import React, {useMemo} from 'react';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Grid from '@mui/material/Grid';
-
+import usePosts from '../queries/usePosts';
+import {useTags} from '../queries/useTags';
 import { Post } from '../components/Post';
 import { TagsBlock } from '../components/TagsBlock';
 import { CommentsBlock } from '../components/CommentsBlock';
 
 export const Home = () => {
+  const {data, isPending} = usePosts();
+  const tags = useTags();
+
   return (
     <>
       <Tabs style={{ marginBottom: 15 }} value={0} aria-label="basic tabs example">
@@ -16,26 +20,35 @@ export const Home = () => {
       </Tabs>
       <Grid container spacing={4}>
         <Grid xs={8} item>
-          {[...Array(5)].map(() => (
+          {isPending ?
+          ([...Array(3)]).map((__, index) => (
             <Post
-              id={1}
-              title="Roast the code #1 | Rock Paper Scissors"
-              imageUrl="https://res.cloudinary.com/practicaldev/image/fetch/s--UnAfrEG8--/c_imagga_scale,f_auto,fl_progressive,h_420,q_auto,w_1000/https://dev-to-uploads.s3.amazonaws.com/uploads/articles/icohm5g0axh9wjmu4oc3.png"
+              key={index}
+              isLoading={isPending}
+            />
+          ))
+          :
+          data.map((post) => (
+            <Post
+              key={post._id}
+              id={post._id}
+              title={post.title}
+              imageUrl={post.imageUrl}
               user={{
-                avatarUrl:
-                  'https://res.cloudinary.com/practicaldev/image/fetch/s--uigxYVRB--/c_fill,f_auto,fl_progressive,h_50,q_auto,w_50/https://dev-to-uploads.s3.amazonaws.com/uploads/user/profile_image/187971/a5359a24-b652-46be-8898-2c5df32aa6e0.png',
-                fullName: 'Keff',
+                avatarUrl: post.user.avatarUrl,
+                fullName: post.user.fullName,
               }}
-              createdAt={'12 июня 2022 г.'}
-              viewsCount={150}
+              createdAt={post.createdAt.slice(0, 10)}
+              viewsCount={post.viewCount}
               commentsCount={3}
-              tags={['react', 'fun', 'typescript']}
+              tags={post.tags}
               isEditable
+              isLoading={isPending}
             />
           ))}
         </Grid>
         <Grid xs={4} item>
-          <TagsBlock items={['react', 'typescript', 'заметки']} isLoading={false} />
+          <TagsBlock items={tags.data} isLoading={tags.isPending} />
           <CommentsBlock
             items={[
               {
