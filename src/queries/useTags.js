@@ -4,7 +4,7 @@ import {useEffect} from 'react';
 
 const fetchTags = async () => {
     try {
-        const response = await axios.get('/posts/tags');
+        const response = await axios.get('/tags');
 
         if (response.status === 200) {
             return response.data;
