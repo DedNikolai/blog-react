@@ -4,8 +4,21 @@ import { Header } from "./components";
 import { Home, FullPost, Registration, AddPost, Login } from "./pages";
 import NotFound from "./pages/NotFound/404";
 import ProtectedRouter from "./components/ProtectedRoute/ProtectedRoute";
+import {useEffect, useContext} from 'react';
+import {AuthContext} from './components/AuthProvider/AuthProvider';
+import {getCurrentUser} from './api/user';
+import Cookies from "js-cookie";
 
 function App() {
+  const {setUser, setUserLoading} = useContext(AuthContext);
+  
+  useEffect(() => {
+    getCurrentUser().then(res =>{
+       setUser(res);
+       setUserLoading(false);
+      });
+  }, []);
+
   return (
     <>
       <Header />
