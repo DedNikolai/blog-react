@@ -3,6 +3,7 @@ import {Routes, Route} from 'react-router-dom';
 import { Header } from "./components";
 import { Home, FullPost, Registration, AddPost, Login } from "./pages";
 import NotFound from "./pages/NotFound/404";
+import ProtectedRouter from "./components/ProtectedRoute/ProtectedRoute";
 
 function App() {
   return (
@@ -12,7 +13,9 @@ function App() {
         <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/posts/:id" element={<FullPost />} />
-            <Route path="/posts/:id/edit" element={<FullPost />} />
+            <Route 
+              path="/posts/:id/edit" 
+              element={<ProtectedRouter><FullPost /></ProtectedRouter>} />
             <Route path="/posts/create" element={<AddPost />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Registration />} />
