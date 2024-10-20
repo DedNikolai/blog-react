@@ -3,7 +3,7 @@ import { Post } from "../components/Post";
 import { Index } from "../components/AddComment";
 import { CommentsBlock } from "../components/CommentsBlock";
 import {useParams, Navigate} from 'react-router-dom';
-import {usePost} from '../queries/usePost';
+import {usePost} from '../api/queries/usePost';
 
 export const FullPost = () => {
   const {id} = useParams();

@@ -56,7 +56,9 @@ export const Login = () => {
         error={!!errors.password?.message}
         helperText={errors.password?.message} 
         label="Password" 
-        fullWidth />
+        fullWidth
+        type="password" 
+      />
       <Button size="large" variant="contained" fullWidth type="submit">
         Войти
       </Button>

@@ -27,3 +27,27 @@ export const getCurrentUser = async () => {
         console.log(error);
     }
 }
+export const createUser = async (data) => {
+    try {
+        const response = await axios.post('/auth/register', data);
+        if (response.status === 200) {
+            toast.success(response.data.message);
+        }
+    } catch(error) {
+        toast.error(error.response.data.message);
+        console.log(error);
+    }
+}
+
+export const confirmEmail = async (id, token) => {
+    try {
+        const response = await axios.get(`/auth/verify/${id}?token=${token}`);
+        if (response.status === 200) {
+            toast.success(response.data.message);
+            return response.data;
+        }
+    } catch(error) {
+        toast.error(error.response.data.message);
+        console.log(error);
+    }
+}

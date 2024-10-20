@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import clsx from 'clsx';
 import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Clear';
@@ -9,6 +9,7 @@ import {Link} from 'react-router-dom';
 import styles from './Post.module.scss';
 import { UserInfo } from '../UserInfo';
 import { PostSkeleton } from './Skeleton';
+import {AuthContext} from '../../components/AuthProvider/AuthProvider';
 
 export const Post = ({
   id,
@@ -22,11 +23,15 @@ export const Post = ({
   children,
   isFullPost,
   isLoading,
-  isEditable,
 }) => {
+
+  const auth = useContext(AuthContext); 
+
   if (isLoading) {
     return <PostSkeleton />;
   }
+
+  let isEditable = auth.user && user?._id === auth.user?._id
 
   const onClickRemove = () => {};
 

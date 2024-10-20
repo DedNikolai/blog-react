@@ -1,9 +1,9 @@
-import React, {useMemo} from 'react';
+import React, {} from 'react';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Grid from '@mui/material/Grid';
-import usePosts from '../queries/usePosts';
-import {useTags} from '../queries/useTags';
+import usePosts from '../api/queries/usePosts';
+import {useTags} from '../api/queries/useTags';
 import { Post } from '../components/Post';
 import { TagsBlock } from '../components/TagsBlock';
 import { CommentsBlock } from '../components/CommentsBlock';
@@ -37,6 +37,7 @@ export const Home = () => {
               user={{
                 avatarUrl: post.user.avatarUrl,
                 fullName: post.user.fullName,
+                _id: post.user._id
               }}
               createdAt={post.createdAt.slice(0, 10)}
               viewsCount={post.viewCount}

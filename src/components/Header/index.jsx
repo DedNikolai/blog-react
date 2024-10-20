@@ -1,13 +1,20 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import Button from '@mui/material/Button';
 import {Link} from 'react-router-dom';
 import styles from './Header.module.scss';
 import Container from '@mui/material/Container';
+import {AuthContext} from '../../components/AuthProvider/AuthProvider';
+import Cookies from 'js-cookie';
 
 export const Header = () => {
-  const isAuth = false;
+  const {user, setUser} = useContext(AuthContext);
 
-  const onClickLogout = () => {};
+  const onClickLogout = () => {
+    if(window.confirm('Are you sure you wont logout')) {
+      Cookies.remove("auth-token");
+      setUser(null);
+    }
+  };
 
   return (
     <div className={styles.root}>
@@ -17,7 +24,7 @@ export const Header = () => {
             <div>BLASHCHUK BLOG</div>
           </Link>
           <div className={styles.buttons}>
-            {isAuth ? (
+            {user ? (
               <>
                 <Link to="/posts/create">
                   <Button variant="contained">Написать статью</Button>

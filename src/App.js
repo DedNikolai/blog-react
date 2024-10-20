@@ -7,7 +7,7 @@ import ProtectedRouter from "./components/ProtectedRoute/ProtectedRoute";
 import {useEffect, useContext} from 'react';
 import {AuthContext} from './components/AuthProvider/AuthProvider';
 import {getCurrentUser} from './api/user';
-import Cookies from "js-cookie";
+import Verify from "./pages/Verify";
 
 function App() {
   const {setUser, setUserLoading} = useContext(AuthContext);
@@ -29,9 +29,10 @@ function App() {
             <Route 
               path="/posts/:id/edit" 
               element={<ProtectedRouter><FullPost /></ProtectedRouter>} />
-            <Route path="/posts/create" element={<AddPost />} />
+            <Route path="/posts/create" element={<ProtectedRouter><AddPost /></ProtectedRouter>} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Registration />} />
+            <Route path="/auth/verify/:id" element={<Verify />} />
             <Route path="*" element={<NotFound />} />
         </Routes>
       </Container>
