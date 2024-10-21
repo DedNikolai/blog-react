@@ -5,11 +5,13 @@ import Button from '@mui/material/Button';
 import SimpleMDE from 'react-simplemde-editor';
 import 'easymde/dist/easymde.min.css';
 import styles from './AddPost.module.scss';
+import {imageUpload, imageRemove} from '../../api/post';
 
 const initialState = {
   title: '',
   tags: '',
-  text: ''
+  text: '',
+  imageUrl: null
 };
 
 const initState = (state) => {
@@ -24,6 +26,8 @@ const reducer = (state = initialState, action) => {
       return {...state, tags: action.payload}
     case 'CHANGE_TEXT':
       return {...state, text: action.payload}
+    case 'CHANGE_IMAGE':
+      return {...state, imageUrl: action.payload}  
     default: 
       return {...state}      
   }
@@ -36,10 +40,23 @@ export const AddPost = () => {
   const inputRef = useRef(null);
 
   const handleChangeFile = async (e) => {
-    console.log(e.target.files[0])
+    const formData = new FormData();
+    formData.append('image', e.target.files[0]);
+    imageUpload(formData).then(res => {
+      dispatch({type: 'CHANGE_IMAGE', payload: res.url})
+    })
+
   };
 
-  const onClickRemoveImage = () => {};
+  const onClickRemoveImage = () => {
+    if (state.imageUrl) {
+      imageRemove(state.imageUrl).then(res => {
+        if (res.status === 200) {
+          dispatch({type: 'CHANGE_IMAGE', payload: null})
+        }
+      })
+    }
+  };
 
   const onChange = React.useCallback((value) => {
     dispatch({type: 'CHANGE_TEXT', payload: value})
@@ -70,13 +87,13 @@ export const AddPost = () => {
         Загрузить превью
       </Button>
       <input ref={inputRef} type="file" onChange={handleChangeFile} hidden />
-      {imageUrl && (
+      {state.imageUrl && (
         <Button variant="contained" color="error" onClick={onClickRemoveImage}>
           Удалить
         </Button>
       )}
-      {imageUrl && (
-        <img className={styles.image} src={`http://localhost:4444${imageUrl}`} alt="Uploaded" />
+      {state.imageUrl && (
+        <img className={styles.image} src={`http://localhost:8000${state.imageUrl}`} alt="Uploaded" />
       )}
       <br />
       <br />
