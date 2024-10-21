@@ -50,9 +50,10 @@ export const AddPost = () => {
 
   const onClickRemoveImage = () => {
     if (state.imageUrl) {
+      inputRef.current.value = ''
       imageRemove(state.imageUrl).then(res => {
         if (res.status === 200) {
-          dispatch({type: 'CHANGE_IMAGE', payload: null})
+            dispatch({type: 'CHANGE_IMAGE', payload: null})
         }
       })
     }
