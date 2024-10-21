@@ -9,7 +9,7 @@ import {imageUpload, imageRemove} from '../../api/post';
 
 const initialState = {
   title: '',
-  tags: '',
+  tags: [],
   text: '',
   imageUrl: null
 };
@@ -23,7 +23,7 @@ const reducer = (state = initialState, action) => {
     case 'CHANGE_TITLE':
       return {...state, title: action.payload}
     case 'CHANGE_TAGS':
-      return {...state, tags: action.payload}
+      return {...state, tags: action.payload.split(',')}
     case 'CHANGE_TEXT':
       return {...state, text: action.payload}
     case 'CHANGE_IMAGE':
