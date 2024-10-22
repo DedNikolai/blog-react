@@ -6,6 +6,7 @@ import SimpleMDE from 'react-simplemde-editor';
 import 'easymde/dist/easymde.min.css';
 import styles from './AddPost.module.scss';
 import {imageUpload, imageRemove} from '../../api/post';
+import usePosts from '../../api/queries/usePosts';
 
 const initialState = {
   title: '',
@@ -23,7 +24,7 @@ const reducer = (state = initialState, action) => {
     case 'CHANGE_TITLE':
       return {...state, title: action.payload}
     case 'CHANGE_TAGS':
-      return {...state, tags: action.payload.split(',')}
+      return {...state, tags: action.payload.replace(/\s/g, '').split(',')}
     case 'CHANGE_TEXT':
       return {...state, text: action.payload}
     case 'CHANGE_IMAGE':
@@ -35,9 +36,9 @@ const reducer = (state = initialState, action) => {
 
 
 export const AddPost = () => {
-  const imageUrl = '';
   const [state, dispatch] = useReducer(reducer, initialState, initState)
   const inputRef = useRef(null);
+  const {mutation} = usePosts();
 
   const handleChangeFile = async (e) => {
     const formData = new FormData();
@@ -64,7 +65,7 @@ export const AddPost = () => {
   }, []);
 
   const onSubmit = () => {
-    console.log(state)
+    mutation.mutate(state);
   }
 
   const options = React.useMemo(

@@ -1,19 +1,6 @@
-import {useQuery, useMutation, useQueryClient} from '@tanstack/react-query';
+import {useMutation, useQueryClient} from '@tanstack/react-query';
 import axios from '../axios';
-import {useEffect} from 'react';
 import {toast} from 'react-toastify';
-
-const fetchPosts = async () => {
-    try {
-        const response = await axios.get('/posts');
-
-        if (response.status === 200) {
-            return response.data;
-        }
-    } catch(error) {
-        console.log(error)
-    }
-};
 
 export const createPost = async (data) => {
     try {
@@ -28,15 +15,8 @@ export const createPost = async (data) => {
     }
 };
 
-function usePosts() {
+export function useCreatePost() {
     const queryClient = useQueryClient();
-
-    const {data = [], isPending, isError, refetch} = useQuery({
-        queryKey: ['posts'], 
-        queryFn: fetchPosts,
-        refetchOnWindowFocus: false
-    });
-
     const mutation = useMutation({
         mutationKey: ["create post"],
         mutationFn: createPost,
@@ -53,13 +33,6 @@ function usePosts() {
         onError: (error) => console.log(error)
     });
 
-    useEffect(() => {
-        if (isError) {
-            console.log(isError)
-        }
-    }, [isError])
-
-    return {data, isPending, mutation};
-}
-
-export default usePosts;
+    const {mutate} = mutation;
+    return mutate;
+};

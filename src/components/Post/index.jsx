@@ -30,8 +30,8 @@ export const Post = ({
   if (isLoading) {
     return <PostSkeleton />;
   }
-
-  let isEditable = auth.user && user?._id === auth.user?._id
+  
+  let isEditable = auth.user && user?._id === auth.user?.user?._id
 
   const onClickRemove = () => {};
 
@@ -52,7 +52,7 @@ export const Post = ({
       {imageUrl && (
         <img
           className={clsx(styles.image, { [styles.imageFull]: isFullPost })}
-          src={imageUrl}
+          src={'http://localhost:8000' + imageUrl}
           alt={title}
         />
       )}
