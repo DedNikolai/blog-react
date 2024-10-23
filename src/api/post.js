@@ -27,3 +27,16 @@ export const imageRemove = async (path) => {
         toast.error('Remove failed');
     }
 };
+
+export const deletePost = async (postId) => {
+    try {
+        const response = await axios.delete(`/posts/${postId}`)
+        if (response.status === 200) {
+            toast.success('Post was deleted')
+            return response;
+        }
+    } catch(error) {
+        console.log(error);
+        toast.error('delete failed');
+    }
+}

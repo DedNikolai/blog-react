@@ -1,4 +1,4 @@
-import React, {} from 'react';
+import React, { useCallback } from 'react';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Grid from '@mui/material/Grid';
@@ -7,10 +7,16 @@ import {useTags} from '../api/queries/useTags';
 import { Post } from '../components/Post';
 import { TagsBlock } from '../components/TagsBlock';
 import { CommentsBlock } from '../components/CommentsBlock';
+import {useQueryClient} from '@tanstack/react-query';
 
 export const Home = () => {
-  const {data, isPending} = usePosts();
+  const {data, isPending} = usePosts({cb: () => {}});
   const tags = useTags();
+  const queryClient = useQueryClient();
+
+  const invalidatePosts = useCallback(() => {
+    queryClient.invalidateQueries({queryKey: ['posts'], refetchType: 'all'});
+  }, [queryClient]);
 
   return (
     <>
@@ -45,6 +51,7 @@ export const Home = () => {
               tags={post.tags}
               isEditable
               isLoading={isPending}
+              refetch = {invalidatePosts}
             />
           ))}
         </Grid>

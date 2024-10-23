@@ -25,5 +25,6 @@ export function usePost(postId) {
         refetchOnWindowFocus: false,
     })
 
+
     return {data, isError, isLoading, isSuccess, isPending}
 };

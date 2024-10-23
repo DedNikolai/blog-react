@@ -3,6 +3,7 @@ import {Routes, Route} from 'react-router-dom';
 import { Header } from "./components";
 import { Home, FullPost, Registration, AddPost, Login } from "./pages";
 import NotFound from "./pages/NotFound/404";
+import EditPost from "./pages/EditPost/EditPost";
 import ProtectedRouter from "./components/ProtectedRoute/ProtectedRoute";
 import {useEffect, useContext} from 'react';
 import {AuthContext} from './components/AuthProvider/AuthProvider';
@@ -28,7 +29,7 @@ function App() {
             <Route path="/posts/:id" element={<FullPost />} />
             <Route 
               path="/posts/:id/edit" 
-              element={<ProtectedRouter><FullPost /></ProtectedRouter>} />
+              element={<ProtectedRouter><EditPost /></ProtectedRouter>} />
             <Route path="/posts/create" element={<ProtectedRouter><AddPost /></ProtectedRouter>} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Registration />} />

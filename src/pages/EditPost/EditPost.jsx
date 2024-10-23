@@ -1,25 +1,23 @@
-import React, {useReducer, useRef, useState} from 'react';
+import React, {useEffect, useReducer, useRef, useState} from 'react';
 import TextField from '@mui/material/TextField';
 import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
 import SimpleMDE from 'react-simplemde-editor';
 import 'easymde/dist/easymde.min.css';
-import styles from './AddPost.module.scss';
-import {imageUpload, imageRemove} from '../../api/post';
-import usePosts from '../../api/queries/usePosts';
+import styles from './EditPost.module.scss';
+import {imageUpload} from '../../api/post';
+import {useParams} from 'react-router-dom';
+import {usePost} from '../../api/queries/usePost';
+import useEdirUser from '../../api/queries/useEdirUser';
 
-const initialState = {
+const initState = {
   title: '',
-  tags: [],
+  imageUrl: '',
   text: '',
-  imageUrl: null
+  tags: ''
 };
 
-const initState = (state) => {
-  return {...state};
-}
-
-const reducer = (state = initialState, action) => {
+const reducer = (state, action) => {
   switch (action.type) {
     case 'CHANGE_TITLE':
       return {...state, title: action.payload}
@@ -28,20 +26,21 @@ const reducer = (state = initialState, action) => {
     case 'CHANGE_TEXT':
       return {...state, text: action.payload}
     case 'CHANGE_IMAGE':
-      return {...state, imageUrl: action.payload}
-    case 'RESER_STATE':
-      return {...initState}    
+      return {...state, imageUrl: action.payload} 
+    case 'RESET_STATE':
+      return {...action.payload}   
     default: 
       return {...state}      
   }
 }
 
 
-export const AddPost = () => {
-  const [state, dispatch] = useReducer(reducer, initialState, initState)
+const EditPost = () => {
+  const {id} = useParams();
+  const {data, isPending} = usePost(id);
+  const {mutate, isUpdating} = useEdirUser({postId: id});
+  const [state, dispatch] = useReducer(reducer, initState)
   const inputRef = useRef(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const {mutation} = usePosts({cb: setIsLoading});
 
   const handleChangeFile = async (e) => {
     const formData = new FormData();
@@ -53,14 +52,7 @@ export const AddPost = () => {
   };
 
   const onClickRemoveImage = () => {
-    if (state.imageUrl) {
-      inputRef.current.value = ''
-      imageRemove(state.imageUrl).then(res => {
-        if (res.status === 200) {
-            dispatch({type: 'CHANGE_IMAGE', payload: null})
-        }
-      })
-    }
+    dispatch({type: 'CHANGE_IMAGE', payload: null})
   };
 
   const onChange = React.useCallback((value) => {
@@ -68,8 +60,7 @@ export const AddPost = () => {
   }, []);
 
   const onSubmit = () => {
-    setIsLoading(true)
-    mutation.mutate(state);
+    mutate({data: state, postId: id});
   }
 
   const options = React.useMemo(
@@ -87,7 +78,13 @@ export const AddPost = () => {
     [],
   );
 
-  if (isLoading) return <h2>Loading...</h2>
+  useEffect(() => {
+    if(data) {
+      dispatch({type: 'RESET_STATE', payload: data})
+    }
+  }, [data])
+
+  if (isUpdating || isPending || !data) return <h2>Loading...</h2>
 
   return (
     <Paper elevation={0} style={{ padding: 30 }}>
@@ -95,12 +92,12 @@ export const AddPost = () => {
         Загрузить превью
       </Button>
       <input ref={inputRef} type="file" onChange={handleChangeFile} hidden />
-      {state.imageUrl && (
+      {state?.imageUrl && (
         <Button variant="contained" color="error" onClick={onClickRemoveImage}>
           Удалить
         </Button>
       )}
-      {state.imageUrl && (
+      {state?.imageUrl && (
         <img className={styles.image} src={`http://localhost:8000${state.imageUrl}`} alt="Uploaded" />
       )}
       <br />
@@ -110,7 +107,7 @@ export const AddPost = () => {
         variant="standard"
         placeholder="Заголовок статьи..."
         fullWidth
-        value={state.title}
+        value={state?.title}
         onChange={(e) => dispatch({type: 'CHANGE_TITLE', payload: e.target.value})}
       />
       <TextField 
@@ -118,23 +115,25 @@ export const AddPost = () => {
         variant="standard" 
         placeholder="Тэги" 
         fullWidth
-        value={state.tags}
+        value={state?.tags}
         onChange={(e) => dispatch({type: 'CHANGE_TAGS', payload: e.target.value})} 
       />
       <SimpleMDE 
         className={styles.editor} 
-        value={state.text} 
+        value={state?.text} 
         onChange={onChange} 
         options={options} 
       />
       <div className={styles.buttons}>
         <Button onClick={onSubmit} size="large" variant="contained">
-          Опубликовать
+          Save
         </Button>
         <a href="/">
-          <Button onClick={() => initState(initState)} size="large">Отмена</Button>
+          <Button size="large">Отмена</Button>
         </a>
       </div>
     </Paper>
   );
 };
+
+export default EditPost;

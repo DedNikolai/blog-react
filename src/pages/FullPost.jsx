@@ -4,6 +4,7 @@ import { Index } from "../components/AddComment";
 import { CommentsBlock } from "../components/CommentsBlock";
 import {useParams, Navigate} from 'react-router-dom';
 import {usePost} from '../api/queries/usePost';
+import Markdown from 'react-markdown';
 
 export const FullPost = () => {
   const {id} = useParams();
@@ -24,6 +25,7 @@ export const FullPost = () => {
         user={{
           avatarUrl: data.user.avatarUrl,
           fullName: data.user.fullName,
+          _id: data.user._id
         }}
         createdAt={data.createdAt.slice(0, 10)}
         viewsCount={data.viewsCount}
@@ -31,9 +33,9 @@ export const FullPost = () => {
         tags={data.tags}
         isFullPost
       >
-        <p>
+        <Markdown>
           {data.text}
-        </p>
+        </Markdown>
       </Post>
       <CommentsBlock
         items={[

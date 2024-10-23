@@ -2,6 +2,7 @@ import {useQuery, useMutation, useQueryClient} from '@tanstack/react-query';
 import axios from '../axios';
 import {useEffect} from 'react';
 import {toast} from 'react-toastify';
+import {useNavigate} from 'react-router-dom';
 
 const fetchPosts = async () => {
     try {
@@ -23,17 +24,19 @@ export const createPost = async (data) => {
             return response.data;
         }
     } catch(error) {
-        toast.error(error.response.data.message);
+        toast.error('Cant create post not valid fields');
         console.log(error);
     }
 };
 
-function usePosts() {
+function usePosts({cb}) {
     const queryClient = useQueryClient();
+    const navigate = useNavigate();
 
     const {data = [], isPending, isError, refetch} = useQuery({
         queryKey: ['posts'], 
         queryFn: fetchPosts,
+        refetchInterval: 5000,
         refetchOnWindowFocus: false
     });
 
@@ -42,22 +45,21 @@ function usePosts() {
         mutationFn: createPost,
         onSuccess: (data) => {
             console.log('success');
+            cb(false);
             queryClient.invalidateQueries({queryKey: ['posts'], refetchType: 'all'});
             queryClient.setQueryData(["posts"], (oldData) => {
                 console.log(oldData)
                 return {
-                  data: [...oldData.data, data],
+                  data: [...oldData, data],
                 };
               });
+            navigate(`/posts/${data._id}`)  
         },
-        onError: (error) => console.log(error)
-    });
-
-    useEffect(() => {
-        if (isError) {
-            console.log(isError)
+        onError: (error) => {
+            cb(false);
+            console.log(error)
         }
-    }, [isError])
+    });
 
     return {data, isPending, mutation};
 }

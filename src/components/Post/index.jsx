@@ -5,11 +5,12 @@ import DeleteIcon from '@mui/icons-material/Clear';
 import EditIcon from '@mui/icons-material/Edit';
 import EyeIcon from '@mui/icons-material/RemoveRedEyeOutlined';
 import CommentIcon from '@mui/icons-material/ChatBubbleOutlineOutlined';
-import {Link} from 'react-router-dom';
+import {Link, useNavigate} from 'react-router-dom';
 import styles from './Post.module.scss';
 import { UserInfo } from '../UserInfo';
 import { PostSkeleton } from './Skeleton';
 import {AuthContext} from '../../components/AuthProvider/AuthProvider';
+import {deletePost} from '../../api/post';
 
 export const Post = ({
   id,
@@ -23,17 +24,29 @@ export const Post = ({
   children,
   isFullPost,
   isLoading,
+  refetch
 }) => {
 
   const auth = useContext(AuthContext); 
+  const navigate = useNavigate();
 
-  if (isLoading) {
-    return <PostSkeleton />;
+  const onClickRemove = () => {
+    deletePost(id).then(res => {
+      if (res.status === 200) {
+        if (isFullPost) {
+          navigate('/')
+        } else {
+          refetch();
+        }
+      }
+    }) 
   }
   
   let isEditable = auth.user && user?._id === auth.user?.user?._id
 
-  const onClickRemove = () => {};
+  if (isLoading) {
+    return <PostSkeleton />;
+  }
 
   return (
     <div className={clsx(styles.root, { [styles.rootFull]: isFullPost })}>
