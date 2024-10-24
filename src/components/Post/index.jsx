@@ -44,7 +44,9 @@ export const Post = ({
   }
   
   let isEditable = auth.user && user?._id === auth.user?.user?._id
-
+  console.log(auth.user)
+  console.log(app.SERVER_URL)
+  console.log(user)
   if (isLoading) {
     return <PostSkeleton />;
   }
