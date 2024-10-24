@@ -11,6 +11,7 @@ import { UserInfo } from '../UserInfo';
 import { PostSkeleton } from './Skeleton';
 import {AuthContext} from '../../components/AuthProvider/AuthProvider';
 import {deletePost} from '../../api/post';
+import {app} from '../../constants';
 
 export const Post = ({
   id,
@@ -65,7 +66,7 @@ export const Post = ({
       {imageUrl && (
         <img
           className={clsx(styles.image, { [styles.imageFull]: isFullPost })}
-          src={'http://localhost:8000' + imageUrl}
+          src={app.SERVER_URL + imageUrl}
           alt={title}
         />
       )}

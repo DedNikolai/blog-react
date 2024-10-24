@@ -9,6 +9,7 @@ import {imageUpload} from '../../api/post';
 import {useParams} from 'react-router-dom';
 import {usePost} from '../../api/queries/usePost';
 import useEdirUser from '../../api/queries/useEdirUser';
+import {app} from '../../constants';
 
 const initState = {
   title: '',
@@ -98,7 +99,7 @@ const EditPost = () => {
         </Button>
       )}
       {state?.imageUrl && (
-        <img className={styles.image} src={`http://localhost:8000${state.imageUrl}`} alt="Uploaded" />
+        <img className={styles.image} src={app.SERVER_URL + state.imageUrl} alt="Uploaded" />
       )}
       <br />
       <br />

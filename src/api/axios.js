@@ -1,8 +1,9 @@
 import axios from "axios";
 import Cookies from "js-cookie";
+import {app} from '../constants';
 
 const instance = axios.create({
-    baseURL: process.env.SERVER_URL || 'http://localhost:8000',
+    baseURL: app.SERVER_URL,
 });
 
 instance.interceptors.request.use(

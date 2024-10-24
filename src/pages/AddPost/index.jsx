@@ -7,6 +7,7 @@ import 'easymde/dist/easymde.min.css';
 import styles from './AddPost.module.scss';
 import {imageUpload, imageRemove} from '../../api/post';
 import usePosts from '../../api/queries/usePosts';
+import {app} from '../../constants';
 
 const initialState = {
   title: '',
@@ -101,7 +102,7 @@ export const AddPost = () => {
         </Button>
       )}
       {state.imageUrl && (
-        <img className={styles.image} src={`http://localhost:8000${state.imageUrl}`} alt="Uploaded" />
+        <img className={styles.image} src={app.SERVER_URL + state.imageUrl} alt="Uploaded" />
       )}
       <br />
       <br />
