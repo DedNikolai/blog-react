@@ -8,8 +8,10 @@ import { Post } from '../components/Post';
 import { TagsBlock } from '../components/TagsBlock';
 import { CommentsBlock } from '../components/CommentsBlock';
 import {useQueryClient} from '@tanstack/react-query';
+import {AuthContext} from '../components/AuthProvider/AuthProvider'
 
 export const Home = () => {
+  const auth = useContext(AuthContext); 
   const {data, isPending} = usePosts({cb: () => {}});
   const tags = useTags();
   const queryClient = useQueryClient();
@@ -52,6 +54,7 @@ export const Home = () => {
               isEditable
               isLoading={isPending}
               refetch = {invalidatePosts}
+              auth={auth}
             />
           ))}
         </Grid>

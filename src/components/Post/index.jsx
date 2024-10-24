@@ -9,7 +9,6 @@ import {Link, useNavigate} from 'react-router-dom';
 import styles from './Post.module.scss';
 import { UserInfo } from '../UserInfo';
 import { PostSkeleton } from './Skeleton';
-import {AuthContext} from '../../components/AuthProvider/AuthProvider';
 import {deletePost} from '../../api/post';
 import {app} from '../../constants';
 
@@ -25,10 +24,10 @@ export const Post = ({
   children,
   isFullPost,
   isLoading,
-  refetch
+  refetch,
+  auth
 }) => {
 
-  const auth = useContext(AuthContext); 
   const navigate = useNavigate();
 
   const onClickRemove = () => {
@@ -44,9 +43,7 @@ export const Post = ({
   }
   
   let isEditable = auth.user && user?._id === auth.user?.user?._id
-  console.log(auth.user)
-  console.log(app.SERVER_URL)
-  console.log(user)
+
   if (isLoading) {
     return <PostSkeleton />;
   }
