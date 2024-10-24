@@ -52,7 +52,7 @@ const EditPost = () => {
   };
 
   const onClickRemoveImage = () => {
-    dispatch({type: 'CHANGE_IMAGE', payload: null})
+    dispatch({type: 'CHANGE_IMAGE', payload: ''})
   };
 
   const onChange = React.useCallback((value) => {
