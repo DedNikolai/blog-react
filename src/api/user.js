@@ -21,7 +21,7 @@ export const getCurrentUser = async () => {
     try {
         const response = await axios.get('/auth/me');
         if (response.status === 200) {
-            return response.data;
+            return response.data.user;
         }
     } catch(error) {
         console.log(error);

@@ -44,11 +44,9 @@ function usePosts({cb}) {
         mutationKey: ["create post"],
         mutationFn: createPost,
         onSuccess: (data) => {
-            console.log('success');
             cb(false);
             queryClient.invalidateQueries({queryKey: ['posts'], refetchType: 'all'});
             queryClient.setQueryData(["posts"], (oldData) => {
-                console.log(oldData)
                 return {
                   data: [...oldData, data],
                 };
